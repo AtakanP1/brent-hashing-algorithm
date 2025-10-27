@@ -14,15 +14,27 @@ Brent::Brent(int table_size){
 int Brent::hash2(int key) { 
         return int(key/data_vec.size())%data_vec.size();
     }
-vector<int> Brent::calculateLQ(int index, int step) { 
+vector<int> Brent::calculateLQ(int index, int step) {
         vector<int> temp;
         temp.push_back(index);
-        do {
-            // Collision: Linear quotient
-            index = (index + step)%data_vec.size();
+        int start = index;
+
+        // Follow the probe sequence but stop if we circle back to the start.
+        for (size_t i = 0; i < data_vec.size(); ++i) {
+            index = (index + step) % data_vec.size();
+            if (index == start) {
+                // We've looped through the entire table without finding a
+                // free slot – the table is full.
+                break;
+            }
+
             temp.push_back(index);
-        }while(data_vec[index].valid == true);
-        //temp.push_back((index + step)%data_vec.size());
+
+            if (!data_vec[index].valid) {
+                break;
+            }
+        }
+
         return temp;
 }
 
@@ -36,9 +48,12 @@ if(data_vec[index].valid == false){
 else if(data_vec[index].valid == true){
     
       vector<int> table = calculateLQ(index,step);
-      int S = table.size(); 
- 
-      //if(S == data_vec.size()) return;
+      int S = table.size();
+
+      // Table full, cannot insert.
+      if (S == data_vec.size() && data_vec[table.back()].valid) {
+          return;
+      }
 
      int smallest_sum = data_vec.size();
      int pos_best = -1, pos_rep = -1;

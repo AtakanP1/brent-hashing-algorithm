@@ -14,7 +14,7 @@ class entry {
 };
 class Brent {
 public:
-	vector<entry> data_vec;
+        vector<entry> data_vec;
 
 public:
 	Brent(int);
@@ -22,7 +22,7 @@ public:
     int hash2(int);
 	void insert(int);
 	vector<int> calculateLQ(int, int);
-	int find_num_probes(int) const;
-	double find_average_num_probes() const;
+        int find_num_probes(int) const;
+        double find_average_num_probes() const;
 
 };
